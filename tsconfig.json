@@ -22,7 +22,8 @@
     "resolveJsonModule": true,
 
     "rootDir": "src",
-    "outDir": "build"
+    "outDir": "build",
+    "typeRoots": ["./node_modules/@types", "definitions"]
   },
   "exclude": ["**/__tests__/**/*", "**/build/**/*"]
 }
