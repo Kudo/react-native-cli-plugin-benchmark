@@ -16,7 +16,7 @@ import ObjcPatcher from './common/ObjcPatcher';
 import runIOS from '@react-native-community/cli-platform-ios/build/commands/runIOS';
 import {logger} from '@react-native-community/cli-tools';
 
-function patchProject(projectConfig: IOSProjectConfig, patchTag: string) {
+function patchProject(projectConfig: IOSProjectConfig, patchTag: string): void {
   const appDelegates = glob.sync(`${projectConfig.sourceDir}/**/AppDelegate.m`);
 
   const addFunctionGetRssMemory = `\
@@ -100,7 +100,9 @@ static vm_size_t RCTGetResidentMemorySize(void)
   fs.writeFileSync(projectConfig.pbxprojPath, content);
 }
 
-async function waitSimulatorLog(patchTag: string) {
+async function waitSimulatorLog(
+  patchTag: string,
+): Promise<{[key: string]: string}> {
   return new Promise(resolve => {
     const result: {[key: string]: string} = {};
     const child = spawn('xcrun', [
@@ -121,9 +123,9 @@ async function waitSimulatorLog(patchTag: string) {
         if (matches) {
           const key = matches[2];
           const value = matches[3];
-          if (key == 'LOG_BEGIN') {
+          if (key === 'LOG_BEGIN') {
             // nop
-          } else if (key == 'LOG_END') {
+          } else if (key === 'LOG_END') {
             child.kill();
             resolve(result);
           } else {
@@ -135,10 +137,14 @@ async function waitSimulatorLog(patchTag: string) {
   });
 }
 
-async function measure(_argv: Array<string>, ctx: Config, args: any) {
+async function measure(
+  _argv: Array<string>,
+  ctx: Config,
+  args: Parameters<typeof runIOS.func>[2],
+): Promise<void> {
   const projectConfig = ctx.project.ios;
   if (projectConfig == null) {
-    throw new CLIError(`iOS platform project config is null`);
+    throw new CLIError('iOS platform project config is null');
   }
 
   const patchTag = 'measure-ios';

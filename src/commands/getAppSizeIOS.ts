@@ -7,7 +7,7 @@
  * @format
  */
 
-import child_process from 'child_process';
+import ChildProcess from 'child_process';
 import {build} from './common/buildIOS';
 import {Config} from '@react-native-community/cli-types';
 import {logger} from '@react-native-community/cli-tools';
@@ -20,15 +20,17 @@ type Options = {
   verbose: boolean;
 };
 
-async function getAppSize(_argv: Array<string>, ctx: Config, args: Options) {
+async function getAppSize(
+  _argv: Array<string>,
+  ctx: Config,
+  args: Options,
+): Promise<void> {
   const appPath = await build(ctx, args);
 
   const size = Number(
-    child_process
-      .execFileSync('du', ['-s', appPath], {
-        encoding: 'utf8',
-      })
-      .split('\t')[0],
+    ChildProcess.execFileSync('du', ['-s', appPath], {
+      encoding: 'utf8',
+    }).split('\t')[0],
   );
 
   logger.info(`Generated app size:\n${JSON.stringify({[appPath]: size})}`);

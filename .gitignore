@@ -2,5 +2,6 @@ node_modules
 .DS_Store
 .vscode
 build/
+coverage/
 *.tsbuildinfo
 yarn-error.log

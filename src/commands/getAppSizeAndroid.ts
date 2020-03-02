@@ -16,16 +16,16 @@ import {logger, CLIError} from '@react-native-community/cli-tools';
 import warnAboutManuallyLinkedLibs from '@react-native-community/cli-platform-android/build/link/warnAboutManuallyLinkedLibs';
 
 // Verifies this is an Android project
-function checkAndroid(root: string) {
+function checkAndroid(root: string): boolean {
   return fs.existsSync(path.join(root, 'android/gradlew'));
 }
 
 // Validates that the package name is correct
-function validatePackageName(packageName: string) {
+function validatePackageName(packageName: string): boolean {
   return /^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$/.test(packageName);
 }
 
-function performChecks(config: Config, args: Options) {
+function performChecks(config: Config, args: Options): void {
   if (!checkAndroid(args.root)) {
     throw new CLIError(
       'Android project not found. Are you sure this is a React Native project?',
@@ -36,7 +36,26 @@ function performChecks(config: Config, args: Options) {
   warnAboutManuallyLinkedLibs(config);
 }
 
-async function build(config: Config, args: Options, verbose: boolean = false) {
+function buildApk(gradlew: string, clean = true, verbose = false): void {
+  try {
+    // using '-x lint' in order to ignore linting errors while building the apk
+    const gradleArgs = ['build', '-x', 'lint'];
+    if (clean) {
+      gradleArgs.unshift('clean');
+    }
+    logger.info('Building the app...');
+    logger.debug(`Running command "${gradlew} ${gradleArgs.join(' ')}"`);
+    execa.sync(gradlew, gradleArgs, {stdio: verbose ? 'inherit' : 'ignore'});
+  } catch (error) {
+    throw new CLIError('Failed to build the app.', error);
+  }
+}
+
+async function build(
+  config: Config,
+  args: Options,
+  verbose = false,
+): Promise<void> {
   performChecks(config, args);
 
   if (args.jetifier) {
@@ -62,13 +81,12 @@ async function build(config: Config, args: Options, verbose: boolean = false) {
 
   // "app" is usually the default value for Android apps with only 1 app
   const {appFolder} = args;
-  // @ts-ignore
   const androidManifest = fs.readFileSync(
     `${appFolder}/src/main/AndroidManifest.xml`,
     'utf8',
   );
 
-  let packageNameMatchArray = androidManifest.match(/package="(.+?)"/);
+  const packageNameMatchArray = androidManifest.match(/package="(.+?)"/);
   if (!packageNameMatchArray || packageNameMatchArray.length === 0) {
     throw new CLIError(
       `Failed to build the app: No package name found. Found errors in ${chalk.underline.dim(
@@ -77,7 +95,7 @@ async function build(config: Config, args: Options, verbose: boolean = false) {
     );
   }
 
-  let packageName = packageNameMatchArray[1];
+  const packageName = packageNameMatchArray[1];
 
   if (!validatePackageName(packageName)) {
     logger.warn(
@@ -92,23 +110,6 @@ async function build(config: Config, args: Options, verbose: boolean = false) {
   buildApk(cmd);
 }
 
-function buildApk(
-  gradlew: string,
-  clean: boolean = true,
-  verbose: boolean = false,
-) {
-  try {
-    // using '-x lint' in order to ignore linting errors while building the apk
-    const gradleArgs = ['build', '-x', 'lint'];
-    if (clean) gradleArgs.unshift('clean');
-    logger.info('Building the app...');
-    logger.debug(`Running command "${gradlew} ${gradleArgs.join(' ')}"`);
-    execa.sync(gradlew, gradleArgs, {stdio: verbose ? 'inherit' : 'ignore'});
-  } catch (error) {
-    throw new CLIError('Failed to build the app.', error);
-  }
-}
-
 export interface Options {
   tasks?: Array<string>;
   root: string;
@@ -120,7 +121,11 @@ export interface Options {
 /**
  * Get generated APK size from as `run-android`
  */
-async function getApkSize(_argv: Array<string>, config: Config, args: Options) {
+async function getApkSize(
+  _argv: Array<string>,
+  config: Config,
+  args: Options,
+): Promise<{[apk: string]: number}> {
   await build(config, args);
 
   const {appFolder} = args;
@@ -136,6 +141,7 @@ async function getApkSize(_argv: Array<string>, config: Config, args: Options) {
     return map;
   }, {});
   logger.info(`Generated app size:\n${JSON.stringify(apksWithSize)}`);
+  return apksWithSize;
 }
 
 export default {
@@ -163,7 +169,7 @@ export default {
     {
       name: '--tasks [list]',
       description: 'Run custom Gradle tasks. By default it\'s "installDebug"',
-      parse: (val: string) => val.split(','),
+      parse: (val: string): Array<string> => val.split(','),
     },
     {
       name: '--no-jetifier',

@@ -17,16 +17,16 @@ export default class ObjcPatcher {
     return this._content.indexOf(this._patchSig) >= 0;
   }
 
-  addImport(file: string) {
+  addImport(file: string): ObjcPatcher {
     const lastImportBegin = this._content.lastIndexOf('\n#import');
-    let lastImportEnd = this._content.indexOf('\n', lastImportBegin + 1);
+    const lastImportEnd = this._content.indexOf('\n', lastImportBegin + 1);
     const headPart = this._content.substring(0, lastImportEnd);
     const tailPart = this._content.substring(lastImportEnd);
     this._content = headPart + `\n#import ${file}` + tailPart;
     return this;
   }
 
-  addFunction(code: string) {
+  addFunction(code: string): ObjcPatcher {
     const lastImplEnd = this._content.lastIndexOf('\n@end');
     const headPart = this._content.substring(0, lastImplEnd);
     const tailPart = this._content.substring(lastImplEnd);
@@ -34,7 +34,7 @@ export default class ObjcPatcher {
     return this;
   }
 
-  replace(searchValue: string | RegExp, replaceValue: string) {
+  replace(searchValue: string | RegExp, replaceValue: string): ObjcPatcher {
     this._content = this._content.replace(searchValue, replaceValue);
     return this;
   }
@@ -44,7 +44,7 @@ export default class ObjcPatcher {
     fs.writeFileSync(toFile, this._content);
   }
 
-  _addPatchSigIfNeeded() {
+  _addPatchSigIfNeeded(): ObjcPatcher {
     if (this.isPatched()) {
       return this;
     }
