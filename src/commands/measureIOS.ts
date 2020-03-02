@@ -46,24 +46,25 @@ static vm_size_t RCTGetResidentMemorySize(void)
       NSLog(@"{{tag}}.LOG_BEGIN=");
 
       // PerformanceLogger
-      NSLog(@"{{tag}}.duration.RCTPLScriptDownload=%lld", [bridge.performanceLogger durationForTag:RCTPLScriptDownload]);
-      NSLog(@"{{tag}}.duration.RCTPLScriptExecution=%lld", [bridge.performanceLogger durationForTag:RCTPLScriptExecution]);
-      NSLog(@"{{tag}}.duration.RCTPLRAMBundleLoad=%lld", [bridge.performanceLogger durationForTag:RCTPLRAMBundleLoad]);
-      NSLog(@"{{tag}}.duration.RCTPLRAMStartupCodeSize=%lld", [bridge.performanceLogger durationForTag:RCTPLRAMStartupCodeSize]);
-      NSLog(@"{{tag}}.duration.RCTPLRAMStartupNativeRequires=%lld", [bridge.performanceLogger durationForTag:RCTPLRAMStartupNativeRequires]);
-      NSLog(@"{{tag}}.duration.RCTPLRAMStartupNativeRequiresCount=%lld", [bridge.performanceLogger durationForTag:RCTPLRAMStartupNativeRequiresCount]);
-      NSLog(@"{{tag}}.duration.RCTPLRAMNativeRequires=%lld", [bridge.performanceLogger durationForTag:RCTPLRAMNativeRequires]);
-      NSLog(@"{{tag}}.duration.RCTPLRAMNativeRequiresCount=%lld", [bridge.performanceLogger durationForTag:RCTPLRAMNativeRequiresCount]);
-      NSLog(@"{{tag}}.duration.RCTPLNativeModuleInit=%lld", [bridge.performanceLogger durationForTag:RCTPLNativeModuleInit]);
-      NSLog(@"{{tag}}.duration.RCTPLNativeModuleMainThread=%lld", [bridge.performanceLogger durationForTag:RCTPLNativeModuleMainThread]);
-      NSLog(@"{{tag}}.duration.RCTPLNativeModulePrepareConfig=%lld", [bridge.performanceLogger durationForTag:RCTPLNativeModulePrepareConfig]);
-      NSLog(@"{{tag}}.duration.RCTPLNativeModuleMainThreadUsesCount=%lld", [bridge.performanceLogger durationForTag:RCTPLNativeModuleMainThreadUsesCount]);
-      NSLog(@"{{tag}}.duration.RCTPLNativeModuleSetup=%lld", [bridge.performanceLogger durationForTag:RCTPLNativeModuleSetup]);
-      NSLog(@"{{tag}}.duration.RCTPLTurboModuleSetup=%lld", [bridge.performanceLogger durationForTag:RCTPLTurboModuleSetup]);
-      NSLog(@"{{tag}}.duration.RCTPLJSCWrapperOpenLibrary=%lld", [bridge.performanceLogger durationForTag:RCTPLJSCWrapperOpenLibrary]);
-      NSLog(@"{{tag}}.duration.RCTPLBridgeStartup=%lld", [bridge.performanceLogger durationForTag:RCTPLBridgeStartup]);
-      NSLog(@"{{tag}}.duration.RCTPLTTI=%lld", [bridge.performanceLogger durationForTag:RCTPLTTI]);
-      NSLog(@"{{tag}}.duration.RCTPLBundleSize=%lld", [bridge.performanceLogger durationForTag:RCTPLBundleSize]);
+      RCTPerformanceLogger* perfLogger = bridge.performanceLogger;
+      NSLog(@"{{tag}}.duration.RCTPLScriptDownload=%lld", [perfLogger durationForTag:RCTPLScriptDownload]);
+      NSLog(@"{{tag}}.duration.RCTPLScriptExecution=%lld", [perfLogger durationForTag:RCTPLScriptExecution]);
+      NSLog(@"{{tag}}.duration.RCTPLRAMBundleLoad=%lld", [perfLogger durationForTag:RCTPLRAMBundleLoad]);
+      NSLog(@"{{tag}}.duration.RCTPLRAMStartupCodeSize=%lld", [perfLogger durationForTag:RCTPLRAMStartupCodeSize]);
+      NSLog(@"{{tag}}.duration.RCTPLRAMStartupNativeRequires=%lld", [perfLogger durationForTag:RCTPLRAMStartupNativeRequires]);
+      NSLog(@"{{tag}}.duration.RCTPLRAMStartupNativeRequiresCount=%lld", [perfLogger durationForTag:RCTPLRAMStartupNativeRequiresCount]);
+      NSLog(@"{{tag}}.duration.RCTPLRAMNativeRequires=%lld", [perfLogger durationForTag:RCTPLRAMNativeRequires]);
+      NSLog(@"{{tag}}.duration.RCTPLRAMNativeRequiresCount=%lld", [perfLogger durationForTag:RCTPLRAMNativeRequiresCount]);
+      NSLog(@"{{tag}}.duration.RCTPLNativeModuleInit=%lld", [perfLogger durationForTag:RCTPLNativeModuleInit]);
+      NSLog(@"{{tag}}.duration.RCTPLNativeModuleMainThread=%lld", [perfLogger durationForTag:RCTPLNativeModuleMainThread]);
+      NSLog(@"{{tag}}.duration.RCTPLNativeModulePrepareConfig=%lld", [perfLogger durationForTag:RCTPLNativeModulePrepareConfig]);
+      NSLog(@"{{tag}}.duration.RCTPLNativeModuleMainThreadUsesCount=%lld", [perfLogger durationForTag:RCTPLNativeModuleMainThreadUsesCount]);
+      NSLog(@"{{tag}}.duration.RCTPLNativeModuleSetup=%lld", [perfLogger durationForTag:RCTPLNativeModuleSetup]);
+      NSLog(@"{{tag}}.duration.RCTPLTurboModuleSetup=%lld", [perfLogger durationForTag:RCTPLTurboModuleSetup]);
+      NSLog(@"{{tag}}.duration.RCTPLJSCWrapperOpenLibrary=%lld", [perfLogger durationForTag:RCTPLJSCWrapperOpenLibrary]);
+      NSLog(@"{{tag}}.duration.RCTPLBridgeStartup=%lld", [perfLogger durationForTag:RCTPLBridgeStartup]);
+      NSLog(@"{{tag}}.duration.RCTPLTTI=%lld", [perfLogger durationForTag:RCTPLTTI]);
+      NSLog(@"{{tag}}.duration.RCTPLBundleSize=%lld", [perfLogger durationForTag:RCTPLBundleSize]);
 
       // Memory
       NSLog(@"{{tag}}.memory=%lu", (unsigned long) RCTGetResidentMemorySize());
