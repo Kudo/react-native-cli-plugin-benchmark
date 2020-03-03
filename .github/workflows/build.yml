@@ -3,11 +3,13 @@ name: Build
 on:
   push:
     path-ignore:
+      - '*.md'
       - '**/*.md'
   pull_request:
     branches:
       - master
     path-ignore:
+      - '*.md'
       - '**/*.md'
 
 jobs:
