@@ -5,3 +5,4 @@ build/
 coverage/
 *.tsbuildinfo
 yarn-error.log
+.eslintcache

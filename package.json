@@ -6,7 +6,8 @@
     "build": "yarn tsc",
     "lint": "eslint --ext .js,.ts . --cache --report-unused-disable-directives",
     "test": "jest",
-    "test:ci:unit": "jest --ci --coverage"
+    "test:ci:unit": "jest --ci --coverage",
+    "publish": "rimraf ./build ./tsconfig.tsbuildinfo && yarn build && yarn publish"
   },
   "main": "build/index.js",
   "files": [
@@ -15,6 +16,9 @@
   ],
   "repository": "https://github.com/Kudo/react-native-cli-plugin-benchmark",
   "license": "MIT",
+  "jest": {
+    "testEnvironment": "node"
+  },
   "devDependencies": {
     "@babel/core": "^7.8.6",
     "@babel/preset-env": "^7.8.4",
@@ -39,6 +43,7 @@
     "eslint-plugin-prettier": "^3.1.2",
     "jest": "^25.1.0",
     "prettier": "^1.19.1",
+    "rimraf": "^3.0.2",
     "typescript": "^3.7.5"
   },
   "peerDependencies": {
