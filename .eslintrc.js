@@ -35,5 +35,11 @@ module.exports = {
         'prettier/prettier': [2, {prettierConfig, parser: 'typescript'}],
       },
     },
+    {
+      files: ['*.js'],
+      rules: {
+        '@typescript-eslint/no-var-requires': 'off',
+      },
+    },
   ],
 };

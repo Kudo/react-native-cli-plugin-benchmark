@@ -103,7 +103,7 @@ static vm_size_t RCTGetResidentMemorySize(void)
 async function waitSimulatorLog(
   patchTag: string,
 ): Promise<{[key: string]: string}> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const result: {[key: string]: string} = {};
     const child = spawn('xcrun', [
       'simctl',

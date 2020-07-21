@@ -82,7 +82,7 @@ function xcprettyAvailable(): boolean {
   return true;
 }
 
-function getProcessOptions(): object {
+function getProcessOptions(): Record<string, unknown> {
   return {
     env: {
       ...process.env,
