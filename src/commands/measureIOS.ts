@@ -79,9 +79,12 @@ static vm_size_t RCTGetResidentMemorySize(void)
       continue;
     }
     patcher
-      .addImport('<mach/mach.h>')
+      .addImport('<mach/mach.h>', '\n#import <React/RCTRootView.h>')
       .addFunction(addFunctionGetRssMemory)
-      .addImport('<React/RCTPerformanceLogger.h>')
+      .addImport(
+        '<React/RCTPerformanceLogger.h>',
+        '\n#import <React/RCTRootView.h>',
+      )
       .replace(
         searchPatternWithinDidFinishLaunchingWithOptions,
         `$1\n${addCodeMeasureAfterFiveSeconds}`,

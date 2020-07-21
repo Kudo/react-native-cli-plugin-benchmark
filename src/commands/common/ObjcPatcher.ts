@@ -17,8 +17,8 @@ export default class ObjcPatcher {
     return this._content.indexOf(this._patchSig) >= 0;
   }
 
-  addImport(file: string): ObjcPatcher {
-    const lastImportBegin = this._content.lastIndexOf('\n#import');
+  addImport(file: string, searchPattern = '\n#import'): ObjcPatcher {
+    const lastImportBegin = this._content.lastIndexOf(searchPattern);
     const lastImportEnd = this._content.indexOf('\n', lastImportBegin + 1);
     const headPart = this._content.substring(0, lastImportEnd);
     const tailPart = this._content.substring(lastImportEnd);

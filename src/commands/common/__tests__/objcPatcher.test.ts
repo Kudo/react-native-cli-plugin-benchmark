@@ -42,6 +42,50 @@ describe('ObjcPatcher', () => {
     expect(fs.writeFileSync.mock.calls[0][1]).toBe(afterPatch);
   });
 
+  test('addImport() will append imports for specified searchPattern', () => {
+    const beforePatch = `\
+#import <UIKit/UIKit.h>
+#import <React/RCTRootView.h>
+
+#if DEBUG
+#import <FlipperKit/FlipperClient.h>
+#endif
+
+@implementation AppDelegate
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+  return NO;
+}
+`;
+
+    const afterPatch = `\
+/* Patched by ObjcPatcher: foo */
+#import <UIKit/UIKit.h>
+#import <React/RCTRootView.h>
+#import <React/Foo.h>
+
+#if DEBUG
+#import <FlipperKit/FlipperClient.h>
+#endif
+
+@implementation AppDelegate
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+  return NO;
+}
+`;
+    fs.readFileSync = jest.fn().mockReturnValueOnce(beforePatch);
+
+    fs.writeFileSync = jest.fn();
+
+    const patcher = new ObjcPatcher('/foo', 'foo');
+    patcher
+      .addImport('<React/Foo.h>', '\n#import <React/RCTRootView.h>')
+      .write('/bar');
+    expect(fs.writeFileSync.mock.calls[0][0]).toBe('/bar');
+    expect(fs.writeFileSync.mock.calls[0][1]).toBe(afterPatch);
+  });
+
   test('isPatched() returns false if the file has not been patched', () => {
     const beforePatch = `\
 #import <UIKit/UIKit.h>
